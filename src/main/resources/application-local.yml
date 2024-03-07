@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/emlt
+    url: jdbc:postgresql://localhost:5432/collectionSaver
     username: postgres
     #set your own postgreSQL password here
     password:
