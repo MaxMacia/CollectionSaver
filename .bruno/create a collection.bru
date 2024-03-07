@@ -5,7 +5,15 @@ meta {
 }
 
 post {
-  url: 
-  body: none
+  url: http://localhost:8080/api/collections
+  body: json
   auth: none
+}
+
+body:json {
+  {
+    "name": "student",
+    "studentName": "Jean", 
+    "age": 30
+  }
 }
