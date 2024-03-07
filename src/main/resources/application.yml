@@ -1,0 +1,19 @@
+spring:
+  application:
+    name: collectionSaver
+  profiles:
+    active: local
+  jpa:
+    defer-datasource-initialization: false
+    database-platform: org.hibernate.dialect.PostgreSQL94Dialect
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        show_sql: true
+    generate-ddl: true
+  sql:
+    init:
+      mode: always
+      continue-on-error: true
