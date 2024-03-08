@@ -11,7 +11,6 @@ import com.maxencemacia.collectionSaver.repository.AttributeRepository;
 import com.maxencemacia.collectionSaver.repository.CollectionRepository;
 import com.maxencemacia.collectionSaver.service.CollectionService;
 import lombok.AllArgsConstructor;
-import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.stereotype.Service;
