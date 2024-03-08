@@ -18,7 +18,7 @@ public class Collection {
     @Column(name = "id", nullable = false)
     private Long id;
     @Column
-    private String name;
+    private String type;
     @OneToMany(mappedBy = "collection", fetch = FetchType.LAZY)
     @JsonManagedReference
     private List<Attribute> attributes;

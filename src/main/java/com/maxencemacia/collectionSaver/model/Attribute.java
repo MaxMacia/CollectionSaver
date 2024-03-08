@@ -20,7 +20,11 @@ public class Attribute {
     @Column
     private String stringValue;
     @Column
-    private Integer numberValue;
+    private Integer intValue;
+    @Column
+    private Double doubleValue;
+    @Column
+    private Boolean boolValue;
     @ManyToOne
     @JoinColumn(name = "collection_id")
     @JsonBackReference
