@@ -11,6 +11,6 @@ public interface CollectionApi {
     /**
      * Create a new Collection in the database
      * */
-    @PostMapping(produces= MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping
     ResponseEntity<String> createCollection(@RequestBody String bodyString);
 }

@@ -24,7 +24,7 @@ public class CollectionServiceImpl implements CollectionService {
     @Override
     public String createCollection(String bodyString) {
         ObjectMapper objectMapper = new ObjectMapper();
-        Collection collection = null;
+        Collection collection;
         JSONObject jsonObjectAttributes = new JSONObject();
         JSONObject jsonObjectCollection = new JSONObject();
 
