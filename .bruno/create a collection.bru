@@ -1,0 +1,19 @@
+meta {
+  name: create a collection
+  type: http
+  seq: 1
+}
+
+post {
+  url: http://localhost:8080/api/collections
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "name": "student",
+    "studentName": "Jean", 
+    "age": 30
+  }
+}
