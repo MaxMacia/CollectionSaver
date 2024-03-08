@@ -11,6 +11,17 @@ import org.springframework.web.bind.annotation.RestController;
 @AllArgsConstructor
 public class CollectionController implements CollectionApi {
     private CollectionService collectionService;
+
+    @Override
+    public ResponseEntity<String> getCollections() {
+        return ResponseEntity.ok(collectionService.getCollections());
+    }
+
+    @Override
+    public ResponseEntity<String> getOneCollection(Long id) {
+        return ResponseEntity.ok(collectionService.getOneCollection(id));
+    }
+
     @Override
     public ResponseEntity<String> createCollection(String bodyString) {
         return new ResponseEntity<>(collectionService.createCollection(bodyString), HttpStatus.CREATED);

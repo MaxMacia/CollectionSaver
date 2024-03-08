@@ -11,6 +11,8 @@ import com.maxencemacia.collectionSaver.repository.AttributeRepository;
 import com.maxencemacia.collectionSaver.repository.CollectionRepository;
 import com.maxencemacia.collectionSaver.service.CollectionService;
 import lombok.AllArgsConstructor;
+import org.jetbrains.annotations.NotNull;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.stereotype.Service;
 
@@ -21,10 +23,53 @@ import java.util.*;
 public class CollectionServiceImpl implements CollectionService {
     private CollectionRepository collectionRepository;
     private AttributeRepository attributeRepository;
+
+    @Override
+    public String getCollections() {
+        List<Collection> collections = collectionRepository.findAll();
+        JSONArray jsonArrayCollections = new JSONArray();
+
+        for (Collection collection : collections) {
+            JSONObject jsonObjectCollection = makeJSONobjectCollection(collection);
+            jsonArrayCollections.put(jsonObjectCollection);
+        }
+
+        return jsonArrayCollections.toString();
+    }
+    @Override
+    public String getOneCollection(Long id) {
+        Collection collection = collectionRepository.findById(id).orElseThrow(
+                () -> new AppException(Error.COLLECTION_NOT_FOUND)
+        );
+        JSONObject jsonObjectCollection = makeJSONobjectCollection(collection);
+
+        return jsonObjectCollection.toString();
+    }
+    private JSONObject makeJSONobjectCollection(Collection collection) {
+        JSONObject jsonObjectAttributes = new JSONObject();
+        JSONObject jsonObjectCollection = new JSONObject();
+        List<Attribute> attributes = collection.getAttributes();
+        for (Attribute attribute : attributes) {
+            if (attribute.getStringValue() != null) {
+                jsonObjectAttributes.put(attribute.getName(), attribute.getStringValue());
+            } else if (attribute.getIntValue() != null) {
+                jsonObjectAttributes.put(attribute.getName(), attribute.getIntValue());
+            } else if (attribute.getDoubleValue() != null) {
+                jsonObjectAttributes.put(attribute.getName(), attribute.getDoubleValue());
+            } else {
+                jsonObjectAttributes.put(attribute.getName(), attribute.getBoolValue());
+            }
+        }
+        jsonObjectCollection.put("type", collection.getType());
+        jsonObjectCollection.put("attributes", jsonObjectAttributes);
+
+        return jsonObjectCollection;
+    }
+
     @Override
     public String createCollection(String bodyString) {
-        ObjectMapper objectMapper = new ObjectMapper();
         Collection collection;
+        ObjectMapper objectMapper = new ObjectMapper();
         JSONObject jsonObjectAttributes = new JSONObject();
         JSONObject jsonObjectCollection = new JSONObject();
 
