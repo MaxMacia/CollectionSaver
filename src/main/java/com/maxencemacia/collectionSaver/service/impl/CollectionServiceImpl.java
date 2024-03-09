@@ -44,33 +44,11 @@ public class CollectionServiceImpl implements CollectionService {
 
         return jsonObjectCollection.toString();
     }
-    private JSONObject makeJSONobjectCollection(Collection collection) {
-        JSONObject jsonObjectAttributes = new JSONObject();
-        JSONObject jsonObjectCollection = new JSONObject();
-        List<Attribute> attributes = collection.getAttributes();
-        for (Attribute attribute : attributes) {
-            if (attribute.getStringValue() != null) {
-                jsonObjectAttributes.put(attribute.getName(), attribute.getStringValue());
-            } else if (attribute.getIntValue() != null) {
-                jsonObjectAttributes.put(attribute.getName(), attribute.getIntValue());
-            } else if (attribute.getDoubleValue() != null) {
-                jsonObjectAttributes.put(attribute.getName(), attribute.getDoubleValue());
-            } else {
-                jsonObjectAttributes.put(attribute.getName(), attribute.getBoolValue());
-            }
-        }
-        jsonObjectCollection.put("type", collection.getType());
-        jsonObjectCollection.put("attributes", jsonObjectAttributes);
-
-        return jsonObjectCollection;
-    }
 
     @Override
     public String createCollection(String bodyString) {
         Collection collection;
         ObjectMapper objectMapper = new ObjectMapper();
-        JSONObject jsonObjectAttributes = new JSONObject();
-        JSONObject jsonObjectCollection = new JSONObject();
 
         try {
             JsonNode jsonNode = objectMapper.readTree(bodyString);
@@ -95,16 +73,12 @@ public class CollectionServiceImpl implements CollectionService {
 
                     if (node.isInt()) {
                         intValue = node.asInt();
-                        jsonObjectAttributes.put(fieldName, intValue);
                     } else if (node.isDouble()) {
                         doubleValue = node.asDouble();
-                        jsonObjectAttributes.put(fieldName, doubleValue);
                     } else if (node.isTextual()) {
                         stringValue = node.asText();
-                        jsonObjectAttributes.put(fieldName, stringValue);
                     } else {
                         boolValue = node.booleanValue();
-                        jsonObjectAttributes.put(fieldName, boolValue);
                     }
                     attributes.add(
                             Attribute.builder()
@@ -133,9 +107,29 @@ public class CollectionServiceImpl implements CollectionService {
             throw new AppException(Error.BAD_REQUEST);
         }
 
+        JSONObject jsonObjectCollection = makeJSONobjectCollection(collection);
+
+        return jsonObjectCollection.toString();
+    }
+
+    private JSONObject makeJSONobjectCollection(Collection collection) {
+        JSONObject jsonObjectAttributes = new JSONObject();
+        JSONObject jsonObjectCollection = new JSONObject();
+        List<Attribute> attributes = collection.getAttributes();
+        for (Attribute attribute : attributes) {
+            if (attribute.getStringValue() != null) {
+                jsonObjectAttributes.put(attribute.getName(), attribute.getStringValue());
+            } else if (attribute.getIntValue() != null) {
+                jsonObjectAttributes.put(attribute.getName(), attribute.getIntValue());
+            } else if (attribute.getDoubleValue() != null) {
+                jsonObjectAttributes.put(attribute.getName(), attribute.getDoubleValue());
+            } else {
+                jsonObjectAttributes.put(attribute.getName(), attribute.getBoolValue());
+            }
+        }
         jsonObjectCollection.put("type", collection.getType());
         jsonObjectCollection.put("attributes", jsonObjectAttributes);
 
-        return jsonObjectCollection.toString();
+        return jsonObjectCollection;
     }
 }
