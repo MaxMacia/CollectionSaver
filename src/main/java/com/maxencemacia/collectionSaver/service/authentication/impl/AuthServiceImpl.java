@@ -58,10 +58,10 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public MessageResponse registerUser(SignupRequest signUpRequest) {
-        if (userRepository.existsByUsername(signUpRequest.getUsername())) {
+        if (Boolean.TRUE.equals(userRepository.existsByUsername(signUpRequest.getUsername()))) {
             throw new AppException(Error.USERNAME_ALREADY_TAKEN);
         }
-        if (userRepository.existsByEmail(signUpRequest.getEmail())) {
+        if (Boolean.TRUE.equals(userRepository.existsByEmail(signUpRequest.getEmail()))) {
             throw new AppException(Error.EMAIL_ALREADY_TAKEN);
         }
 

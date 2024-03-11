@@ -98,7 +98,7 @@ class CollectionServiceTest {
             fail("An error was expected");
         } catch (AppException appException) {
             //Then
-            assertThat(appException.getMessage()).isEqualTo("La collection doit avoir un type");
+            assertThat(appException.getMessage()).isEqualTo("The collection must have a type");
         }
     }
 }

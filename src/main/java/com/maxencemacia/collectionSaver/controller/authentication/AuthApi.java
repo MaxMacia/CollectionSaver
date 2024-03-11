@@ -30,7 +30,7 @@ public interface AuthApi {
     @PostMapping("/signup")
     @Operation(summary="Signup")
     @ApiResponses(value ={
-            @ApiResponse(   responseCode = "200" ,
+            @ApiResponse(   responseCode = "201" ,
                     description = "Creates a user",
                     content = {@Content( mediaType = "application/json")})
     })

@@ -7,6 +7,7 @@ import com.maxencemacia.collectionSaver.entity.payload.authentication.response.J
 import com.maxencemacia.collectionSaver.entity.payload.authentication.response.MessageResponse;
 import com.maxencemacia.collectionSaver.service.authentication.AuthService;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,6 +23,6 @@ public class AuthController implements AuthApi {
 
     @Override
     public ResponseEntity<MessageResponse> registerUser(SignupRequest signUpRequest) {
-        return ResponseEntity.ok(authService.registerUser(signUpRequest));
+        return new ResponseEntity<>(authService.registerUser(signUpRequest), HttpStatus.CREATED);
     }
 }

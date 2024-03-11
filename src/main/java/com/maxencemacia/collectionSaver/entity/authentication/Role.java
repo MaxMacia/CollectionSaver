@@ -1,15 +1,13 @@
 package com.maxencemacia.collectionSaver.entity.authentication;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Entity
 @Getter
 @Setter
 @Table(name = "roles")
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class Role {
