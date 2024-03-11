@@ -6,6 +6,7 @@ import org.apache.http.HttpStatus;
 
 @Getter
 public enum Error {
+    COLLECTION_NOT_FOUND("La collection est introuvable", HttpStatus.SC_NOT_FOUND),
     MUST_HAVE_A_TYPE("La collection doit avoir un type", HttpStatus.SC_BAD_REQUEST),
     BAD_REQUEST("bad request", HttpStatus.SC_BAD_REQUEST);
     private final String message;

@@ -9,6 +9,7 @@ import com.maxencemacia.collectionSaver.model.Collection;
 import com.maxencemacia.collectionSaver.repository.AttributeRepository;
 import com.maxencemacia.collectionSaver.repository.CollectionRepository;
 import com.maxencemacia.collectionSaver.service.impl.CollectionServiceImpl;
+import org.instancio.Instancio;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -18,6 +19,7 @@ import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
@@ -34,6 +36,101 @@ class CollectionServiceTest {
     private AttributeRepository attributeRepository;
     @InjectMocks
     private CollectionServiceImpl collectionService;
+    @Test
+    void getCollections() {
+        //Given
+        List<Collection> collections = List.of(
+                Collection.builder()
+                        .id(1L)
+                        .type("anyType")
+                        .attributes(
+                                List.of(
+                                        Attribute.builder()
+                                                .id(1L)
+                                                .name("string")
+                                                .stringValue("anyString")
+                                                .build(),
+                                        Attribute.builder()
+                                                .id(2L)
+                                                .name("number")
+                                                .intValue(30)
+                                                .build()
+                                )
+                        )
+                        .build()
+        );
+
+        when(collectionRepository.findAll()).thenReturn(collections);
+
+        //when
+        String result = collectionService.getCollections();
+
+        //Then
+        assertThat(result).isEqualTo("[{\"attributes\":{\"number\":30,\"string\":\"anyString\"},\"type\":\"anyType\"}]");
+
+        verify(collectionRepository, times(1)).findAll();
+    }
+    @Test
+    void getCollections_empty() {
+        //Given
+        List<Collection> collections = List.of();
+
+        when(collectionRepository.findAll()).thenReturn(collections);
+
+        //when
+        String result = collectionService.getCollections();
+
+        //Then
+        assertThat(result).isEqualTo("[]");
+
+        verify(collectionRepository, times(1)).findAll();
+    }
+    @Test
+    void getOneCollection() {
+        //Given
+        Collection collection = Collection.builder()
+                .id(1L)
+                .type("anyType")
+                .attributes(
+                        List.of(
+                                Attribute.builder()
+                                        .id(1L)
+                                        .name("string")
+                                        .stringValue("anyString")
+                                        .build(),
+                                Attribute.builder()
+                                        .id(2L)
+                                        .name("number")
+                                        .intValue(30)
+                                        .build()
+                        )
+                )
+                .build();
+
+        when(collectionRepository.findById(1L)).thenReturn(Optional.ofNullable(collection));
+
+        //when
+        String result = collectionService.getOneCollection(1L);
+
+        //Then
+        assertThat(result).isEqualTo("{\"attributes\":{\"number\":30,\"string\":\"anyString\"},\"type\":\"anyType\"}");
+
+        verify(collectionRepository, times(1)).findById(1L);
+    }
+    @Test
+    void getOneCollection_CollectionNotFound() {
+        //Given
+        when(collectionRepository.findById(1L)).thenReturn(Optional.empty());
+
+        try {
+            //when
+            String result = collectionService.getOneCollection(1L);
+            fail("An error was expected");
+        } catch (AppException appException) {
+            //Then
+            assertThat(appException.getMessage()).isEqualTo("La collection est introuvable");
+        }
+    }
     @Test
     void createCollection() throws JsonProcessingException {
         //Given
