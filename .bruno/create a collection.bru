@@ -10,9 +10,13 @@ post {
   auth: none
 }
 
+headers {
+  Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJtYXgiLCJpYXQiOjE3MTAxNjcyODMsImV4cCI6MTcxMDE3MDg4M30.0FqPo7vsR2sGE_IhTdHbn1zCKRQehEP_GuoF7SR9-1w
+}
+
 body:json {
   {
-    "name": "student",
+    "type": "student",
     "studentName": "Jean", 
     "age": 30
   }

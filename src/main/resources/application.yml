@@ -17,3 +17,7 @@ spring:
     init:
       mode: always
       continue-on-error: true
+collectionSaver:
+  app:
+    jwtSecret: secretHyperSafesecretHyperSafesecretHyperSafesecretHyperSafesecretHyperSafesecretHyperSafesecretHyperSafe
+    jwtExpirationMs: 3600000

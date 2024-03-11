@@ -1,4 +1,4 @@
-package com.maxencemacia.collectionSaver.model;
+package com.maxencemacia.collectionSaver.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
