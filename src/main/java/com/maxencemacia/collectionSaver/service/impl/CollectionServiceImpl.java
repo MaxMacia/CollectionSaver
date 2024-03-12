@@ -3,6 +3,7 @@ package com.maxencemacia.collectionSaver.service.impl;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.maxencemacia.collectionSaver.entity.authentication.User;
 import com.maxencemacia.collectionSaver.exception.AppException;
 import com.maxencemacia.collectionSaver.exception.Error;
 import com.maxencemacia.collectionSaver.entity.Attribute;
@@ -15,6 +16,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
@@ -46,7 +48,7 @@ public class CollectionServiceImpl implements CollectionService {
     }
 
     @Override
-    public String createCollection(String bodyString) {
+    public String createCollection(User user, String bodyString) {
         Collection collection;
         ObjectMapper objectMapper = new ObjectMapper();
 
@@ -93,6 +95,10 @@ public class CollectionServiceImpl implements CollectionService {
 
                 collection = Collection.builder()
                         .type(jsonNode.get("type").asText())
+                        .creationDate(LocalDateTime.now())
+                        .creationUser(user)
+                        .modificationDate(LocalDateTime.now())
+                        .modificationUser(user.getUsername())
                         .attributes(attributes)
                         .build();
 
@@ -127,6 +133,7 @@ public class CollectionServiceImpl implements CollectionService {
                 jsonObjectAttributes.put(attribute.getName(), attribute.getBoolValue());
             }
         }
+        jsonObjectCollection.put("id", collection.getId());
         jsonObjectCollection.put("type", collection.getType());
         jsonObjectCollection.put("attributes", jsonObjectAttributes);
 

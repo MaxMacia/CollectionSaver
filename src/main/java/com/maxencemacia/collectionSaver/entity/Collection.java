@@ -1,6 +1,8 @@
 package com.maxencemacia.collectionSaver.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.maxencemacia.collectionSaver.entity.authentication.User;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
@@ -14,6 +16,7 @@ import java.util.List;
 @Getter
 @Setter
 @Builder
+@Table(name = "collections")
 @NoArgsConstructor
 @AllArgsConstructor
 public class Collection {
@@ -29,9 +32,9 @@ public class Collection {
     @LastModifiedBy
     @Column
     private String modificationUser;
-    @LastModifiedBy
-    @Column
-    private String creationUser;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User creationUser;
     @CreatedDate
     @Column
     private LocalDateTime creationDate;

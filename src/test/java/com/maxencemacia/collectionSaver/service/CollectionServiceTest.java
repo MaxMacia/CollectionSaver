@@ -3,6 +3,7 @@ package com.maxencemacia.collectionSaver.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.maxencemacia.collectionSaver.entity.authentication.User;
 import com.maxencemacia.collectionSaver.exception.AppException;
 import com.maxencemacia.collectionSaver.entity.Attribute;
 import com.maxencemacia.collectionSaver.entity.Collection;
@@ -134,6 +135,7 @@ class CollectionServiceTest {
     @Test
     void createCollection() throws JsonProcessingException {
         //Given
+        User user = Instancio.create(User.class);
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode jsonNode = mapper.createObjectNode();
         jsonNode.put("type", "anyType");
@@ -166,7 +168,7 @@ class CollectionServiceTest {
         when(attributeRepository.saveAll(any())).thenReturn(collection.getAttributes());
 
         //When
-        String result = collectionService.createCollection(bodyString);
+        String result = collectionService.createCollection(user, bodyString);
 
         //Then
         assertThat(result).isEqualTo("{\"attributes\":{\"number\":30,\"string\":\"anyString\"},\"type\":\"anyType\"}");
@@ -179,6 +181,7 @@ class CollectionServiceTest {
     @Test
     void createCollection_MustHaveAType() throws JsonProcessingException {
         //Given
+        User user = Instancio.create(User.class);
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode jsonNode = mapper.createObjectNode();
         jsonNode.put("string", "anyString");
@@ -191,7 +194,7 @@ class CollectionServiceTest {
 
         try {
             //When
-            collectionService.createCollection(bodyString);
+            collectionService.createCollection(user, bodyString);
             fail("An error was expected");
         } catch (AppException appException) {
             //Then

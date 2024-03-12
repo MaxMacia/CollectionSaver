@@ -8,6 +8,7 @@ import lombok.*;
 @Getter
 @Setter
 @Builder
+@Table(name = "attributes")
 @NoArgsConstructor
 @AllArgsConstructor
 public class Attribute {

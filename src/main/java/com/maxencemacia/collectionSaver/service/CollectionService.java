@@ -1,6 +1,8 @@
 package com.maxencemacia.collectionSaver.service;
 
 
+import com.maxencemacia.collectionSaver.entity.authentication.User;
+
 public interface CollectionService {
     /**
      * Get all the Collections from database
@@ -13,5 +15,5 @@ public interface CollectionService {
     /**
      * Create a new Collection in the database
      * */
-    String createCollection(String bodyString);
+    String createCollection(User user, String bodyString);
 }

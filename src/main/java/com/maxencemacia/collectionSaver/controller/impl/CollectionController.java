@@ -1,6 +1,7 @@
 package com.maxencemacia.collectionSaver.controller.impl;
 
 import com.maxencemacia.collectionSaver.controller.CollectionApi;
+import com.maxencemacia.collectionSaver.entity.authentication.User;
 import com.maxencemacia.collectionSaver.service.CollectionService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -23,7 +24,7 @@ public class CollectionController implements CollectionApi {
     }
 
     @Override
-    public ResponseEntity<String> createCollection(String bodyString) {
-        return new ResponseEntity<>(collectionService.createCollection(bodyString), HttpStatus.CREATED);
+    public ResponseEntity<String> createCollection(User user, String bodyString) {
+        return new ResponseEntity<>(collectionService.createCollection(user, bodyString), HttpStatus.CREATED);
     }
 }

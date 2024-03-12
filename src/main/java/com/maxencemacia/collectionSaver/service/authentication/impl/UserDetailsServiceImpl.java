@@ -6,6 +6,7 @@ import com.maxencemacia.collectionSaver.exception.Error;
 import com.maxencemacia.collectionSaver.entity.authentication.User;
 import com.maxencemacia.collectionSaver.repository.UserRepository;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -13,7 +14,10 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 @Service
+@Slf4j
 @AllArgsConstructor
 public class UserDetailsServiceImpl implements UserDetailsService {
     private final UserRepository userRepository;
@@ -28,9 +32,14 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     }
 
     public User getCurrentUser() {
-        UserDetailsImpl userDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String userUuid = ((UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUuid();
+        Optional<User> optional = userRepository.findByUuid(userUuid);
 
-        return userRepository.findById(userDetails.getId())
-                .orElseThrow(() -> new AppException(Error.USER_NOT_FOUND));
+        if (optional.isEmpty()) {
+            log.error("Utilisateur non trouvé pour l'uid suivant : {}", userUuid);
+            throw new AppException(Error.USER_NOT_FOUND);
+        }
+
+        return optional.get();
     }
 }
