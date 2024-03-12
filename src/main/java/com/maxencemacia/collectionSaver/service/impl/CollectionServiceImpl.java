@@ -11,6 +11,7 @@ import com.maxencemacia.collectionSaver.repository.AttributeRepository;
 import com.maxencemacia.collectionSaver.repository.CollectionRepository;
 import com.maxencemacia.collectionSaver.service.CollectionService;
 import lombok.AllArgsConstructor;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.stereotype.Service;
 
@@ -21,12 +22,33 @@ import java.util.*;
 public class CollectionServiceImpl implements CollectionService {
     private CollectionRepository collectionRepository;
     private AttributeRepository attributeRepository;
+
+    @Override
+    public String getCollections() {
+        List<Collection> collections = collectionRepository.findAll();
+        JSONArray jsonArrayCollections = new JSONArray();
+
+        for (Collection collection : collections) {
+            JSONObject jsonObjectCollection = makeJSONobjectCollection(collection);
+            jsonArrayCollections.put(jsonObjectCollection);
+        }
+
+        return jsonArrayCollections.toString();
+    }
+    @Override
+    public String getOneCollection(Long id) {
+        Collection collection = collectionRepository.findById(id).orElseThrow(
+                () -> new AppException(Error.COLLECTION_NOT_FOUND)
+        );
+        JSONObject jsonObjectCollection = makeJSONobjectCollection(collection);
+
+        return jsonObjectCollection.toString();
+    }
+
     @Override
     public String createCollection(String bodyString) {
-        ObjectMapper objectMapper = new ObjectMapper();
         Collection collection;
-        JSONObject jsonObjectAttributes = new JSONObject();
-        JSONObject jsonObjectCollection = new JSONObject();
+        ObjectMapper objectMapper = new ObjectMapper();
 
         try {
             JsonNode jsonNode = objectMapper.readTree(bodyString);
@@ -51,16 +73,12 @@ public class CollectionServiceImpl implements CollectionService {
 
                     if (node.isInt()) {
                         intValue = node.asInt();
-                        jsonObjectAttributes.put(fieldName, intValue);
                     } else if (node.isDouble()) {
                         doubleValue = node.asDouble();
-                        jsonObjectAttributes.put(fieldName, doubleValue);
                     } else if (node.isTextual()) {
                         stringValue = node.asText();
-                        jsonObjectAttributes.put(fieldName, stringValue);
                     } else {
                         boolValue = node.booleanValue();
-                        jsonObjectAttributes.put(fieldName, boolValue);
                     }
                     attributes.add(
                             Attribute.builder()
@@ -89,9 +107,29 @@ public class CollectionServiceImpl implements CollectionService {
             throw new AppException(Error.BAD_REQUEST);
         }
 
+        JSONObject jsonObjectCollection = makeJSONobjectCollection(collection);
+
+        return jsonObjectCollection.toString();
+    }
+
+    private JSONObject makeJSONobjectCollection(Collection collection) {
+        JSONObject jsonObjectAttributes = new JSONObject();
+        JSONObject jsonObjectCollection = new JSONObject();
+        List<Attribute> attributes = collection.getAttributes();
+        for (Attribute attribute : attributes) {
+            if (attribute.getStringValue() != null) {
+                jsonObjectAttributes.put(attribute.getName(), attribute.getStringValue());
+            } else if (attribute.getIntValue() != null) {
+                jsonObjectAttributes.put(attribute.getName(), attribute.getIntValue());
+            } else if (attribute.getDoubleValue() != null) {
+                jsonObjectAttributes.put(attribute.getName(), attribute.getDoubleValue());
+            } else {
+                jsonObjectAttributes.put(attribute.getName(), attribute.getBoolValue());
+            }
+        }
         jsonObjectCollection.put("type", collection.getType());
         jsonObjectCollection.put("attributes", jsonObjectAttributes);
 
-        return jsonObjectCollection.toString();
+        return jsonObjectCollection;
     }
 }

@@ -10,6 +10,7 @@ public enum Error {
     EMAIL_ALREADY_TAKEN("Email already taken", HttpStatus.SC_CONFLICT),
     USER_NOT_FOUND("User not found", HttpStatus.SC_NOT_FOUND),
     ROLE_NOT_FOUND("Role not found", HttpStatus.SC_NOT_FOUND),
+    COLLECTION_NOT_FOUND("Collection not found", HttpStatus.SC_NOT_FOUND),
     MUST_HAVE_A_TYPE("The collection must have a type", HttpStatus.SC_BAD_REQUEST),
     BAD_REQUEST("bad request", HttpStatus.SC_BAD_REQUEST);
     private final String message;
